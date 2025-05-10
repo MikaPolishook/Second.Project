@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+
+
+.movie-details {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* ממורכז את התוכן בתיבת הסרט */
+    justify-content: center;
+}
+
+.movie-details img {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.movie-details h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.movie-details p {
+    font-size: 1.2em;
+    color: #666;
+}
+
+
+#starsContainer {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    gap: 3px;
+    align-items:center;
+    filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.3));
+}
+
+
+#ratingDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;  
+}
+
+#ratingInput {
+    width: 40px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#ratingButton {
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}

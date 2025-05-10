@@ -1,40 +1,102 @@
 <!DOCTYPE html>
-<html>
 
 <head>
-  <link rel="stylesheet" href="../styles/general.css">
+
   <title>Log In</title>
-  <link rel="stylesheet" href="login.css">
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #fce4ec; /* Light pink background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .container {
+    background-color: #ffffff; /* White background for form */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  h1 {
+    color: #d81b60; /* Dark pink for the title */
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-spacing: 10px;
+  }
+
+  td {
+    text-align: left;
+    font-size: 1.1em;
+  }
+
+  input {
+    padding: 10px;
+    width: 100%;
+    font-size: 1em;
+    border: 1px solid #d81b60;
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+
+  button {
+    background-color: #d81b60; /* Pink background for the button */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #c2185b; /* Darker pink on hover */
+  }
+
+  .form-footer {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #888;
+  }
+  </style>
 </head>
 
 <body>
-  <iframe id="headerIframe" src="header.html"></iframe>
-
   <div class="container">
-
     <h1>Log In</h1>
 
     <table>
       <tr>
         <td>Username:</td>
-        <td><input type="text" id="usernameInput"></td>
+        <td><input type="text" id="usernameInput" placeholder="Enter your username"></td>
       </tr>
       <tr>
         <td>Password:</td>
-        <td><input type="text" id="passwordInput"></td>
+        <td><input type="password" id="passwordInput" placeholder="Enter your password"></td>
       </tr>
     </table>
 
-    <br>
-
     <button id="submitButton">Submit</button>
-
     <br>
-
+    <br>
     <div id="messageDiv"></div>
 
+    <div class="form-footer">
+      <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+    </div>
   </div>
-
 
   <script type="module" src="login.js"></script>
 </body>

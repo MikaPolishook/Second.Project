@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 class Program
 {
-  static void Main()
+    private static double value;
+    private static int movieCardId;
+
+    static void Main()
   {
     int port = 5000;
 
@@ -14,6 +18,16 @@ class Program
     Console.WriteLine($"Main Page: http://localhost:{port}/website/pages/index.html");
 
     var database = new Database();
+
+    if (!database.MovieCards.Any())
+    {
+
+      database.MovieCards.Add(new MovieCard("Outer Banks", "https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABQ-JLdIftbjpq1egLdVnlCxSMHEk92lnsdyMVW1hlG112qc-W6-QFPzm212c5FYsjtjdIx9K7h2ZXZ5JMYF1OwVOXQ1Lw2G5dimNRWOFO_eOyc_Alh1n-wL3lN9OYvLIK_wvJQ.jpg?r=7d3", "On an island of haves and have-nots, teen John B enlists his three best friends to hunt for a legendary treasure linked to his father's disappearance."));
+      database.MovieCards.Add(new MovieCard("The Vampire Diaries", "https://static0.srcdn.com/wordpress/wp-content/uploads/2022/11/The-Vampire-Diaries-New-Poster.jpg", "The lives, loves, dangers and disasters in the town, Mystic Falls, Virginia. Creaturs of unspeakable horror lurk beneath this town as a teenage girl is suddenly torn between two vampire brothers."));
+      database.MovieCards.Add(new MovieCard("To All The Boys I've Loved Before", "https://m.media-amazon.com/images/M/MV5BMjQ3NjM5MTAzN15BMl5BanBnXkFtZTgwODQzMDAwNjM@._V1_.jpg", "A teenage girl's secret love letters are exposed and wreak havoc on her love life."));
+
+      database.SaveChanges();
+    }
 
     while (true)
     {
@@ -36,9 +50,88 @@ class Program
       {
         try
         {
-          /*──────────────────────────────────╮
-          │ Handle your custome requests here │
-          ╰──────────────────────────────────*/
+
+          if (request.Path == "getMovieCards")
+          {
+            MovieCard[] movieCards = database.MovieCards.ToArray();
+            response.Send(movieCards);
+          }
+
+          if (request.Path == "signUp")
+          {
+            var (username, password) = request.GetBody<(string, string)>();
+
+            var userExists = database.Users.Any(user =>
+              user.Username == username
+            );
+
+            if (!userExists)
+            {
+              var userId = Guid.NewGuid().ToString();
+              database.Users.Add(new User(userId, username, password));
+              response.Send(userId);
+            }
+          }
+
+         if (request.Path == "logIn")
+          {
+            var (username, password) = request.GetBody<(string, string)>();
+
+            var user = database.Users.FirstOrDefault(
+              user => user.Username == username && user.Password == password
+            );
+
+            var userId = user?.Id;
+
+            response.Send(userId);
+          }
+
+           else if (request.Path == "getRating")
+          {
+            var (userId, movieCardId) = request.GetBody<(string, int)>();
+
+            var value = database.Ratings
+              .FirstOrDefault(rating => rating.UserId == userId && rating.MovieCardId == movieCardId)?
+              .Value;
+
+            response.Send(value);
+          }
+
+          if (request.Path == "rate")
+          {
+             var (rating ,userId, movieCardId) = request.GetBody<(int , string, int)>();
+
+             var existsRating = database.Ratings
+             .FirstOrDefault(r => r.UserId == userId && r.MovieCardId == movieCardId);
+
+             if (existsRating != null)
+              {
+               existsRating.Value = rating;
+                }
+
+             else
+             {
+              var newRating = new Rating(rating, userId, movieCardId);
+               database.Ratings.Add(newRating);
+             }
+              //  database.SaveChanges();
+
+                response.Send("Rating successfully updated or created.");
+          }
+
+          if (request.Path == "GetAverage")
+          {
+           var movieCardId = request.GetBody<int>();  
+
+            var averageRating = database.Ratings
+            .Where(rating => rating.MovieCardId == movieCardId) 
+            .Average(rating => rating.Value);  
+
+
+             response.Send(averageRating);
+          }
+
+
           response.SetStatusCode(405);
 
           database.SaveChanges();
@@ -57,9 +150,9 @@ class Program
 
 class Database() : DbBase("database")
 {
-  /*──────────────────────────────╮
-  │ Add your database tables here │
-  ╰──────────────────────────────*/
+  public DbSet<User> Users { get; set; } = default!;
+  public DbSet<MovieCard> MovieCards { get; set; } = default!;
+  public DbSet<Rating> Ratings { get; set; } = default!;
 }
 
 class User(string id, string username, string password)
@@ -67,4 +160,23 @@ class User(string id, string username, string password)
   [Key] public string Id { get; set; } = id;
   public string Username { get; set; } = username;
   public string Password { get; set; } = password;
+}
+
+class MovieCard(string name, string image, string description)
+{
+  [Key] public int Id { get; set; } = default!;
+  public string Name { get; set; } = name;
+  public string Image { get; set; } = image;
+  public string Description { get; set; } = description;
+}
+
+class Rating(double value, string userId, int movieCardId)
+{
+  [Key] public int Id { get; set; } = default!;
+  public double Value { get; set; } = value;
+  public string UserId { get; set; } = userId;
+  [ForeignKey("UserId")] public User User { get; set; } = default!;
+  public int MovieCardId{ get; set; } = movieCardId;
+  [ForeignKey("MovieCardId")] public MovieCard MovieCard { get; set; } = default!;
+
 }

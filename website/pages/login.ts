@@ -18,3 +18,4 @@ submitButton.onclick = async function () {
     location.href = "index.html";
   }
 }
+
