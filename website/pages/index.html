@@ -4,6 +4,8 @@
 <head>
   <title>המלצות סרטים וסדרות</title>
   <link rel="stylesheet" href="styles.css">
+   <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -15,15 +17,44 @@
     <br>
     <br>
       <div class="container">
-        
+
           </div>
 
-          <br>
-          <br>
-      <button id="OpenBtn"> Add A Series/Movie</button>
 
+          <br>
+          <br>
+
+      <button id="OpenPopup"> Add A Series/Movie</button>
+
+      <h2 id="h2TopM">Top 10 Movies</h2>
+     <div class="top10movies"> 
+         <div class="container" id="top10Container">
+
+         </div>
+     </div>
+
+        <div id="overlay">
+          <div id="popup">
+            
+      <h2>Add Series / Movie</h2>
+
+      <label>Series / Movie Title:</label>
+      <input type="text" id="titleInput" placeholder="For example: House of the Dragon">
+
+      <label>Image URL:</label>
+      <input type="text" id="imageInput" placeholder="For example: https://example.com/image.jpg">
+
+      <label>Description:</label>
+      <textarea id="descriptionInput" rows="4" placeholder="Enter the description here..."></textarea>
+
+      <button class="close-btn">Close</button>
+      <button class="save-btn">Save</button>
+
+          </div>
+         </div>
   </section>
 </main>
+
 
 
 

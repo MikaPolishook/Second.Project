@@ -77,4 +77,5 @@ body {
     transition: background-color 0.3s ease;
     margin-bottom: 5px;
     margin-top: 5px;
+    margin-right: 5px;
 }

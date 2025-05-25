@@ -73,20 +73,29 @@ class Program
             }
           }
 
-         if (request.Path == "logIn")
+          if (request.Path == "logIn")
           {
             var (username, password) = request.GetBody<(string, string)>();
 
             var user = database.Users.FirstOrDefault(
               user => user.Username == username && user.Password == password
-            );
+            )!;
 
-            var userId = user?.Id;
+            var userId = user.Id;
 
             response.Send(userId);
           }
 
-           else if (request.Path == "getRating")
+          else if (request.Path == "GetUsername")
+          {
+           string userId = request.GetBody<string>();
+           var user = database.Users.Find(userId);
+    
+           if (user != null)
+           response.Send(user.Username);
+          }
+
+          else if (request.Path == "getRating")
           {
             var (userId, movieCardId) = request.GetBody<(string, int)>();
 
@@ -114,7 +123,6 @@ class Program
               var newRating = new Rating(rating, userId, movieCardId);
                database.Ratings.Add(newRating);
              }
-              //  database.SaveChanges();
 
                 response.Send("Rating successfully updated or created.");
           }
@@ -127,9 +135,97 @@ class Program
             .Where(rating => rating.MovieCardId == movieCardId) 
             .Average(rating => rating.Value);  
 
-
              response.Send(averageRating);
           }
+
+          if (request.Path == "addMovieCard")
+          {
+           var newMovie = request.GetBody<MovieCard>();
+
+           var movie = new MovieCard(newMovie.Name, newMovie.Image, newMovie.Description);
+
+           database.MovieCards.Add(movie);
+
+           response.Send("Movie added successfully.");
+          }
+
+          if (request.Path == "deleteMovie")
+          {
+            var movieId = request.GetBody<int>(); 
+
+            var movieToDelete = database.MovieCards.FirstOrDefault(MovieCard => MovieCard.Id == movieId);
+
+            if (movieToDelete != null)
+             {
+
+            var relatedRatings = database.Ratings.Where(Rating => Rating.MovieCardId == movieId).ToList();
+            database.Ratings.RemoveRange(relatedRatings);
+
+           database.MovieCards.Remove(movieToDelete);
+
+           response.Send("Movie deleted successfully.");
+             }
+          }
+
+          if (request.Path == "addFavorite")
+          {
+          var (userId, movieCardId) = request.GetBody<(string, int)>();
+
+          var exists = database.Favorites.Any(f => f.UserId == userId && f.MovieCardId == movieCardId);
+
+          if (!exists)
+           {
+            var favorite = new Favorite(userId, movieCardId);
+            database.Favorites.Add(favorite);
+           }
+
+           response.Send("Added to favorites");
+        }
+
+
+         if (request.Path == "getFavorites")
+         {
+          var userId = request.GetBody<string>();
+          var favorites = database.Favorites.Where(f => f.UserId == userId).Select(f => f.MovieCard).ToArray();
+
+          response.Send(favorites);
+         }
+
+           if (request.Path == "removeFavorite")
+          {
+            var (userId, movieCardId) = request.GetBody<(string, int)>();
+
+            var Favorite = database.Favorites.FirstOrDefault(f =>
+            f.UserId == userId && f.MovieCardId == movieCardId);
+            database.Favorites.Remove(Favorite);
+
+            response.Send("Favorite removed");
+          }
+
+
+          if (request.Path == "getTop10Movies")
+          {
+            var top10 = database.MovieCards
+          .Select(movie => new
+          {
+            Movie = movie,
+            AverageRating = database.Ratings
+               .Where(r => r.MovieCardId == movie.Id)
+               .Average(r => (double?)r.Value) ?? 0  // אם אין דירוג = 0
+          })
+         .OrderByDescending(m => m.AverageRating)
+         .Take(10)
+         .Select(m => m.Movie)
+         .ToArray();
+
+            response.Send(top10);
+          }
+
+         
+
+
+
+        
 
 
           response.SetStatusCode(405);
@@ -153,6 +249,7 @@ class Database() : DbBase("database")
   public DbSet<User> Users { get; set; } = default!;
   public DbSet<MovieCard> MovieCards { get; set; } = default!;
   public DbSet<Rating> Ratings { get; set; } = default!;
+  public DbSet<Favorite> Favorites { get; set; } = default!;
 }
 
 class User(string id, string username, string password)
@@ -176,7 +273,16 @@ class Rating(double value, string userId, int movieCardId)
   public double Value { get; set; } = value;
   public string UserId { get; set; } = userId;
   [ForeignKey("UserId")] public User User { get; set; } = default!;
-  public int MovieCardId{ get; set; } = movieCardId;
+  public int MovieCardId { get; set; } = movieCardId;
   [ForeignKey("MovieCardId")] public MovieCard MovieCard { get; set; } = default!;
 
+}
+
+class Favorite(string userId, int movieCardId)
+{
+  [Key] public int Id { get; set; } = default!;
+  public string UserId { get; set; } = userId;
+  [ForeignKey("UserId")] public User User { get; set; } = default!;
+  public int MovieCardId { get; set; } = movieCardId;
+  [ForeignKey("MovieCardId")] public MovieCard MovieCard { get; set; } = default!;
 }

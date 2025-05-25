@@ -9,6 +9,11 @@ let messageDiv = document.getElementById("messageDiv") as HTMLDivElement;
 submitButton.onclick = async function () {
   let userId = await send("signUp", [usernameInput.value, passwordInput.value]) as string | null;
 
+if (passwordInput.value == null && usernameInput.value == null)
+{
+  messageDiv.innerText = "Please Enter Username And Password";
+}
+
   if (userId != null) {
     localStorage.setItem("userId", userId);
     location.href = "index.html";

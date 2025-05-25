@@ -17,8 +17,11 @@ let userId = localStorage.getItem("userId");
 let urlParams = new URLSearchParams(window.location.search);
 let seretId = parseInt(urlParams.get("seretId") || "", 10);
 
+  if (!userId) {
+    ratingDiv.innerHTML = "Please Connect So You Can Rate";
+    }
 
-if (userId !=null)
+if (userId)
 {
 
 ratingInput.oninput = function () {
@@ -31,6 +34,7 @@ ratingInput.oninput = function () {
 };
 
 ratingButton.onclick = async function () {
+
   let rating = parseFloat(ratingInput.value);
   if (!Number.isNaN(rating)) {
     console.log(rating, userId, seretId);
@@ -39,6 +43,7 @@ ratingButton.onclick = async function () {
   } else {
     alert("Enter a valid rating.");
   }
+
 };
 
 async function drawStars() {
@@ -64,6 +69,7 @@ async function drawStars() {
 drawStars();
 
 }
+
 
 send("getMovieCards", []).then((MovieCards) => {
     let movie = MovieCards.find((movie: MovieCard) => movie.Id === seretId);

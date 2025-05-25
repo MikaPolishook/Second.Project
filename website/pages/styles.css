@@ -41,7 +41,6 @@ body {
     background-color: #FF69B4; 
 }
 
-
 .movie-list {
     padding: 40px 0;
     background-color: #FFF0F5; 
@@ -54,7 +53,6 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
 }
-
 
 #AddButton {
     background-color: #FFF; 
@@ -79,7 +77,7 @@ body {
     text-align: center;
     padding: 15px;
     transition: transform 0.3s;
-    height: 320px;
+    height: 350px;
     text-decoration: none !important;
 }
 
@@ -92,3 +90,199 @@ body {
     border-radius: 12px;
     margin-bottom: 20px;
 }
+
+    #OpenPopup {
+      padding: 10px 20px;
+      background-color: #ffb3cc; 
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+          font-family: 'Poppins', sans-serif;
+    }
+
+    #OpenPopup:hover {
+      background-color: #ff99b3; 
+    }
+
+  /* רקע לפופאפ */
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center; 
+  align-items: center; 
+  z-index: 9999;
+}
+
+/* חלון הפופאפ */
+#popup {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  height: 450px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  position: relative;
+  margin: auto; 
+  font-family: 'Bungee', sans-serif;
+}
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #000000;
+     font-family: 'Bungee', sans-serif;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+      margin-bottom: 5px;
+      color: #000000; 
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #f1c4d6; 
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .close-btn, .save-btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .close-btn {
+      background-color: #ffb3cc; 
+      color: white;
+      float: left;
+    }
+
+    .save-btn {
+      background-color: #ffb3cc; 
+      color: white;
+      float: right;
+    }
+
+    .close-btn:hover {
+      background-color: #ff99b3; 
+    }
+
+    .save-btn:hover {
+      background-color: #ff99b3; 
+    }
+
+    .deleteButton {
+      margin-top: 5px;
+  height: 25px;
+  padding: 4px 4px;
+  background-color:  #ffb3cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+   font-family: 'Poppins', sans-serif;
+}
+
+.deleteButton:hover {
+  background-color: #ff99b3;
+}
+
+.favoriteButton {
+        margin-top: 5px;
+  height: 25px;
+  padding: 4px 4px;
+  background-color:  #ffb3cc; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+     font-family: 'Poppins', sans-serif;
+  
+}
+
+.favoriteButton:hover {
+  background-color: #ff99b3;
+}
+
+
+
+
+#h2TopM {
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+
+}
+
+.top10movies {
+    padding: 20px 0;
+    background-color: #FFF0F5; 
+}
+
+.top10movies .container {
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.top-movie {
+    background-color: #FFF; 
+    color: black;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.3s;
+    height: 370px;
+    width: 250px;
+    text-decoration: none !important;
+}
+
+
+.top-movie img {
+    height: 200px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.top-movie h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #FF69B4;
+}
+
+.top-movie h3 {
+    margin: 10px 0 0 0;
+    font-size: 20px;
+}
+
+
+
