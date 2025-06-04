@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 class Program
 {
-    private static double value;
-    private static int movieCardId;
+  private static double value;
+  private static int movieCardId;
 
-    static void Main()
+  static void Main()
   {
     int port = 5000;
 
@@ -19,12 +19,17 @@ class Program
 
     var database = new Database();
 
+
+    var newUser = new User("UserId", "Username", " ");
+    database.Users.Add(newUser);
+    database.SaveChanges();
+
     if (!database.MovieCards.Any())
     {
 
-      database.MovieCards.Add(new MovieCard("Outer Banks", "https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABQ-JLdIftbjpq1egLdVnlCxSMHEk92lnsdyMVW1hlG112qc-W6-QFPzm212c5FYsjtjdIx9K7h2ZXZ5JMYF1OwVOXQ1Lw2G5dimNRWOFO_eOyc_Alh1n-wL3lN9OYvLIK_wvJQ.jpg?r=7d3", "On an island of haves and have-nots, teen John B enlists his three best friends to hunt for a legendary treasure linked to his father's disappearance."));
-      database.MovieCards.Add(new MovieCard("The Vampire Diaries", "https://static0.srcdn.com/wordpress/wp-content/uploads/2022/11/The-Vampire-Diaries-New-Poster.jpg", "The lives, loves, dangers and disasters in the town, Mystic Falls, Virginia. Creaturs of unspeakable horror lurk beneath this town as a teenage girl is suddenly torn between two vampire brothers."));
-      database.MovieCards.Add(new MovieCard("To All The Boys I've Loved Before", "https://m.media-amazon.com/images/M/MV5BMjQ3NjM5MTAzN15BMl5BanBnXkFtZTgwODQzMDAwNjM@._V1_.jpg", "A teenage girl's secret love letters are exposed and wreak havoc on her love life."));
+      database.MovieCards.Add(new MovieCard("Outer Banks", "https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABQ-JLdIftbjpq1egLdVnlCxSMHEk92lnsdyMVW1hlG112qc-W6-QFPzm212c5FYsjtjdIx9K7h2ZXZ5JMYF1OwVOXQ1Lw2G5dimNRWOFO_eOyc_Alh1n-wL3lN9OYvLIK_wvJQ.jpg?r=7d3", "On an island of haves and have-nots, teen John B enlists his three best friends to hunt for a legendary treasure linked to his father's disappearance.", "UserId"));
+      database.MovieCards.Add(new MovieCard("The Vampire Diaries", "https://static0.srcdn.com/wordpress/wp-content/uploads/2022/11/The-Vampire-Diaries-New-Poster.jpg", "The lives, loves, dangers and disasters in the town, Mystic Falls, Virginia. Creaturs of unspeakable horror lurk beneath this town as a teenage girl is suddenly torn between two vampire brothers.", "UserId"));
+      database.MovieCards.Add(new MovieCard("To All The Boys I've Loved Before", "https://m.media-amazon.com/images/M/MV5BMjQ3NjM5MTAzN15BMl5BanBnXkFtZTgwODQzMDAwNjM@._V1_.jpg", "A teenage girl's secret love letters are exposed and wreak havoc on her love life.", "UserId"));
 
       database.SaveChanges();
     }
@@ -88,11 +93,11 @@ class Program
 
           else if (request.Path == "GetUsername")
           {
-           string userId = request.GetBody<string>();
-           var user = database.Users.Find(userId);
-    
-           if (user != null)
-           response.Send(user.Username);
+            string userId = request.GetBody<string>();
+            var user = database.Users.Find(userId);
+
+            if (user != null)
+              response.Send(user.Username);
           }
 
           else if (request.Path == "getRating")
@@ -108,90 +113,105 @@ class Program
 
           if (request.Path == "rate")
           {
-             var (rating ,userId, movieCardId) = request.GetBody<(int , string, int)>();
+            var (rating, userId, movieCardId) = request.GetBody<(int, string, int)>();
 
-             var existsRating = database.Ratings
-             .FirstOrDefault(r => r.UserId == userId && r.MovieCardId == movieCardId);
+            var existsRating = database.Ratings
+            .FirstOrDefault(r => r.UserId == userId && r.MovieCardId == movieCardId);
 
-             if (existsRating != null)
-              {
-               existsRating.Value = rating;
-                }
+            if (existsRating != null)
+            {
+              existsRating.Value = rating;
+            }
 
-             else
-             {
+            else
+            {
               var newRating = new Rating(rating, userId, movieCardId);
-               database.Ratings.Add(newRating);
-             }
+              database.Ratings.Add(newRating);
+            }
 
-                response.Send("Rating successfully updated or created.");
+            response.Send("Rating successfully updated or created.");
           }
+
+
 
           if (request.Path == "GetAverage")
           {
-           var movieCardId = request.GetBody<int>();  
+            var movieCardId = request.GetBody<int>();
 
-            var averageRating = database.Ratings
-            .Where(rating => rating.MovieCardId == movieCardId) 
-            .Average(rating => rating.Value);  
+            var existsRatings = database.Ratings
+            .Where(rating => rating.MovieCardId == movieCardId).ToArray();
 
-             response.Send(averageRating);
+            if (existsRatings.Length == 0)
+            {
+              response.Send("0");
+            }
+
+            else
+            {
+              var AverageRatings = existsRatings.Average(rating => rating.Value);
+              response.Send(AverageRatings);
+            }
           }
+
+
 
           if (request.Path == "addMovieCard")
           {
-           var newMovie = request.GetBody<MovieCard>();
+            var newMovie = request.GetBody<MovieCard>();
 
-           var movie = new MovieCard(newMovie.Name, newMovie.Image, newMovie.Description);
+            var movie = new MovieCard(newMovie.Name, newMovie.Image, newMovie.Description, newMovie.CreatedBy);
 
-           database.MovieCards.Add(movie);
+            database.MovieCards.Add(movie);
 
-           response.Send("Movie added successfully.");
+            response.Send("Movie added successfully.");
           }
 
           if (request.Path == "deleteMovie")
           {
-            var movieId = request.GetBody<int>(); 
+            var movieId = request.GetBody<int>();
 
             var movieToDelete = database.MovieCards.FirstOrDefault(MovieCard => MovieCard.Id == movieId);
 
             if (movieToDelete != null)
-             {
+            {
 
-            var relatedRatings = database.Ratings.Where(Rating => Rating.MovieCardId == movieId).ToList();
-            database.Ratings.RemoveRange(relatedRatings);
+              var relatedRatings = database.Ratings.Where(Rating => Rating.MovieCardId == movieId).ToList();
+              database.Ratings.RemoveRange(relatedRatings);
 
-           database.MovieCards.Remove(movieToDelete);
+              database.MovieCards.Remove(movieToDelete);
 
-           response.Send("Movie deleted successfully.");
-             }
+              response.Send("Movie deleted successfully.");
+            }
           }
 
           if (request.Path == "addFavorite")
           {
-          var (userId, movieCardId) = request.GetBody<(string, int)>();
+            var (userId, movieCardId) = request.GetBody<(string, int)>();
 
-          var exists = database.Favorites.Any(f => f.UserId == userId && f.MovieCardId == movieCardId);
+            var exists = database.Favorites.Any(f => f.UserId == userId && f.MovieCardId == movieCardId);
 
-          if (!exists)
-           {
-            var favorite = new Favorite(userId, movieCardId);
-            database.Favorites.Add(favorite);
-           }
+            if (!exists)
+            {
+              var favorite = new Favorite(userId, movieCardId);
+              database.Favorites.Add(favorite);
+            }
 
-           response.Send("Added to favorites");
-        }
+            response.Send("Added to favorites");
+          }
 
 
-         if (request.Path == "getFavorites")
-         {
-          var userId = request.GetBody<string>();
-          var favorites = database.Favorites.Where(f => f.UserId == userId).Select(f => f.MovieCard).ToArray();
+          if (request.Path == "getFavorites")
+          {
+            var userId = request.GetBody<string>();
+            var favorites = database.Favorites
+            .Where(f => f.UserId == userId)
+            .Select(f => f.MovieCard)
+            .ToArray();
 
-          response.Send(favorites);
-         }
+            response.Send(favorites);
+          }
 
-           if (request.Path == "removeFavorite")
+          if (request.Path == "removeFavorite")
           {
             var (userId, movieCardId) = request.GetBody<(string, int)>();
 
@@ -203,29 +223,29 @@ class Program
           }
 
 
+
           if (request.Path == "getTop10Movies")
           {
             var top10 = database.MovieCards
-          .Select(movie => new
-          {
-            Movie = movie,
-            AverageRating = database.Ratings
-               .Where(r => r.MovieCardId == movie.Id)
-               .Average(r => (double?)r.Value) ?? 0  // אם אין דירוג = 0
-          })
-         .OrderByDescending(m => m.AverageRating)
-         .Take(10)
-         .Select(m => m.Movie)
-         .ToArray();
+              .Select(movie => new
+              {
+                Movie = movie,
+                AverageRating = database.Ratings
+                  .Where(r => r.MovieCardId == movie.Id)
+                  .Average(r => (double?)r.Value) ?? 0
+              })
+              .OrderByDescending(m => m.AverageRating)
+              .Take(10)
+              .Select(m => m.Movie)
+              .ToArray();
 
             response.Send(top10);
           }
 
-         
 
 
 
-        
+
 
 
           response.SetStatusCode(405);
@@ -259,12 +279,15 @@ class User(string id, string username, string password)
   public string Password { get; set; } = password;
 }
 
-class MovieCard(string name, string image, string description)
+class MovieCard(string name, string image, string description, string createdBy)
 {
   [Key] public int Id { get; set; } = default!;
   public string Name { get; set; } = name;
   public string Image { get; set; } = image;
   public string Description { get; set; } = description;
+  public string CreatedBy { get; set; } = createdBy;
+  [ForeignKey("CreatedBy")] public User User { get; set; } = default!;
+
 }
 
 class Rating(double value, string userId, int movieCardId)

@@ -4,7 +4,7 @@ let container = document.getElementById("favoritesContainer") as HTMLElement;
 let userId = localStorage.getItem("userId");
 
 if (!userId) {
-  container.innerHTML = "<p>Please Connect To See Your Favoritess</p>";
+  container.innerHTML = "<p>Please Connect To See Your Favorites :)</p>";
 } else {
   loadFavorites();
 }
@@ -22,14 +22,7 @@ async function loadFavorites() {
     card.classList.add("movie-card");
     card.href = `seret.html?seretId=${movie.Id}`;
 
-    let image = document.createElement("img");
-    image.src = movie.Image;
-    image.alt = movie.Name;
-
-    let name = document.createElement("h3");
-    name.innerText = movie.Name;
-
-
+        
     let deleteButton = document.createElement("button");
     deleteButton.innerText = "Delete";
     deleteButton.classList.add("deleteButton");
@@ -39,11 +32,18 @@ async function loadFavorites() {
     await send("removeFavorite", [userId, movie.Id]); 
     container.removeChild(card); 
     }
+
+    let image = document.createElement("img");
+    image.src = movie.Image;
+    image.alt = movie.Name;
+
+    let name = document.createElement("h3");
+    name.innerText = movie.Name;
      
 
-    card.appendChild(deleteButton);
     card.appendChild(image);
     card.appendChild(name);
+    card.appendChild(deleteButton);
 
     container.appendChild(card);
   });

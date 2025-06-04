@@ -5,6 +5,7 @@ type MovieCard = {
     Name: string,
     Image: string,
     Description: string,
+    CreatedBy: string,
   };
 
 
@@ -24,10 +25,12 @@ MovieCards.forEach(movie => {
     let movieName = document.createElement("h3");
     movieName.innerText = movie.Name;
 
-    if (userId != null)
+
+    if (userId != null && movie.CreatedBy === userId)
     {
     let deleteButton = document.createElement("button");
-    deleteButton.innerText = "Delete";
+    let trashImg = document.createElement("img");
+    trashImg.src = "/website/images/trash-can.png";
     deleteButton.classList.add("deleteButton");
 
         deleteButton.onclick = async function (event) {
@@ -35,8 +38,11 @@ MovieCards.forEach(movie => {
             await send("deleteMovie", movie.Id); 
             movieListContainer.removeChild(movieCard); 
     };
+        deleteButton.appendChild(trashImg);
         movieCard.appendChild(deleteButton);
-  }
+  } 
+  
+  
 
     if (userId != null)
     {
@@ -72,7 +78,7 @@ let saveBtn = document.querySelector(".save-btn") as HTMLButtonElement;
 
 OpenPopup.onclick = async function () {
   popup.style.display = "block";
-  overlay.style.display = "block";
+  overlay.style.display = "flex";
 };
 
 
@@ -91,6 +97,7 @@ saveBtn.onclick = async function () {
     Name: title,
     Image: image,
     Description: description,
+    CreatedBy: userId, 
   };
 
    await send("addMovieCard", newMovie);

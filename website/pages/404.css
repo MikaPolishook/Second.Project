@@ -1,0 +1,42 @@
+img {
+    height: 300px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px
+    ;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom right, #ff85a2, #ffffff); /* ורוד בהיר ללבן */
+  font-family: 'Arial', sans-serif;
+  color: #d6336c;
+}
+
+
+.container {
+  text-align: center;
+    padding: 20px;
+}
+
+a {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #ff85a2;
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+a:hover {
+  background-color: #ff5c85;
+}
