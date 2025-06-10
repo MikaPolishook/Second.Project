@@ -35,6 +35,7 @@ MovieCards.forEach(movie => {
 
         deleteButton.onclick = async function (event) {
           event.preventDefault();
+              location.reload();
             await send("deleteMovie", movie.Id); 
             movieListContainer.removeChild(movieCard); 
     };
@@ -76,6 +77,12 @@ let overlay = document.getElementById("overlay") as HTMLDivElement;
 let closeBtn = document.querySelector(".close-btn") as HTMLButtonElement;
 let saveBtn = document.querySelector(".save-btn") as HTMLButtonElement;
 
+
+if (!userId)
+{
+  OpenPopup.style.display = "none";
+}
+
 OpenPopup.onclick = async function () {
   popup.style.display = "block";
   overlay.style.display = "flex";
@@ -85,6 +92,7 @@ OpenPopup.onclick = async function () {
 closeBtn.onclick = function () {
   popup.style.display = "none";
   overlay.style.display = "none";
+    location.reload();
 };
 
 
@@ -92,7 +100,15 @@ saveBtn.onclick = async function () {
   let title = (document.getElementById("titleInput") as HTMLInputElement).value;
   let image = (document.getElementById("imageInput") as HTMLInputElement).value;
   let description = (document.getElementById("descriptionInput") as HTMLTextAreaElement).value;
+  let DivMessage = document.getElementById("messageDiv") as HTMLDivElement;
 
+  if (title == "" || image == "" || description == "")
+  {
+    DivMessage.innerText = "Please Enter Valid Details";
+  }
+  
+  else
+  {
   const newMovie = {
     Name: title,
     Image: image,
@@ -106,6 +122,7 @@ saveBtn.onclick = async function () {
 
   popup.style.display = "none";
   overlay.style.display = "none";
+}
 }
 
 

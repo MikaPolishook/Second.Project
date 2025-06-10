@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 class Program
 {
-  private static double value;
-  private static int movieCardId;
 
   static void Main()
   {
@@ -19,13 +17,11 @@ class Program
 
     var database = new Database();
 
-
-    var newUser = new User("UserId", "Username", " ");
-    database.Users.Add(newUser);
-    database.SaveChanges();
-
-    if (!database.MovieCards.Any())
+    if (database.IsNewlyCreated())
     {
+
+     var newUser = new User("UserId", "Username", " ");
+    database.Users.Add(newUser);
 
       database.MovieCards.Add(new MovieCard("Outer Banks", "https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABQ-JLdIftbjpq1egLdVnlCxSMHEk92lnsdyMVW1hlG112qc-W6-QFPzm212c5FYsjtjdIx9K7h2ZXZ5JMYF1OwVOXQ1Lw2G5dimNRWOFO_eOyc_Alh1n-wL3lN9OYvLIK_wvJQ.jpg?r=7d3", "On an island of haves and have-nots, teen John B enlists his three best friends to hunt for a legendary treasure linked to his father's disappearance.", "UserId"));
       database.MovieCards.Add(new MovieCard("The Vampire Diaries", "https://static0.srcdn.com/wordpress/wp-content/uploads/2022/11/The-Vampire-Diaries-New-Poster.jpg", "The lives, loves, dangers and disasters in the town, Mystic Falls, Virginia. Creaturs of unspeakable horror lurk beneath this town as a teenage girl is suddenly torn between two vampire brothers.", "UserId"));
@@ -84,11 +80,11 @@ class Program
 
             var user = database.Users.FirstOrDefault(
               user => user.Username == username && user.Password == password
-            )!;
+            );
 
-            var userId = user.Id;
-
-            response.Send(userId);
+            var userId = user?.Id;
+             response.Send(userId);
+          
           }
 
           else if (request.Path == "GetUsername")
@@ -215,9 +211,9 @@ class Program
           {
             var (userId, movieCardId) = request.GetBody<(string, int)>();
 
-            var Favorite = database.Favorites.FirstOrDefault(f =>
+            var favorite = database.Favorites.FirstOrDefault(f =>
             f.UserId == userId && f.MovieCardId == movieCardId);
-            database.Favorites.Remove(Favorite);
+            database.Favorites.Remove(favorite);
 
             response.Send("Favorite removed");
           }

@@ -3,12 +3,6 @@ import { send } from "../utilities";
 let container = document.getElementById("favoritesContainer") as HTMLElement;
 let userId = localStorage.getItem("userId");
 
-if (!userId) {
-  container.innerHTML = "<p>Please Connect To See Your Favorites :)</p>";
-} else {
-  loadFavorites();
-}
-
 async function loadFavorites() {
   const favorites = await send("getFavorites", userId) as {
     Id: number,
@@ -16,6 +10,13 @@ async function loadFavorites() {
     Image: string,
     Description: string
   }[];
+
+  if (!userId) {
+  container.innerHTML = "<p>Please Connect To See Your Favorites :)</p>";
+} else {
+  loadFavorites();
+}
+
 
   favorites.forEach(movie => {
     let card = document.createElement("a");

@@ -15,7 +15,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom right, #ff85a2, #ffffff); /* ורוד בהיר ללבן */
+  background: linear-gradient(to bottom right, #ff85a2, #ffffff); 
   font-family: 'Arial', sans-serif;
   color: #d6336c;
 }
