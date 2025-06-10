@@ -211,9 +211,9 @@ class Program
           {
             var (userId, movieCardId) = request.GetBody<(string, int)>();
 
-            var favorite = database.Favorites.FirstOrDefault(f =>
+            var Favorite = database.Favorites.FirstOrDefault(f =>
             f.UserId == userId && f.MovieCardId == movieCardId);
-            database.Favorites.Remove(favorite);
+            database.Favorites.Remove(Favorite);
 
             response.Send("Favorite removed");
           }
