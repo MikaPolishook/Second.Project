@@ -109,7 +109,7 @@ class Program
 
           if (request.Path == "rate")
           {
-            var (rating, userId, movieCardId) = request.GetBody<(int, string, int)>();
+            var (rating, userId, movieCardId) = request.GetBody<(double, string, int)>();
 
             var existsRating = database.Ratings
             .FirstOrDefault(r => r.UserId == userId && r.MovieCardId == movieCardId);
